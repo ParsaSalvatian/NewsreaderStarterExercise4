@@ -3,6 +3,9 @@ package at.ac.fhcampuswien.newsanalyzer.ui;
 
 import at.ac.fhcampuswien.newsanalyzer.ctrl.Controller;
 import at.ac.fhcampuswien.newsanalyzer.ctrl.NewsAPIException;
+import at.ac.fhcampuswien.newsanalyzer.downloader.Downloader;
+import at.ac.fhcampuswien.newsanalyzer.downloader.ParallelDownloader;
+import at.ac.fhcampuswien.newsanalyzer.downloader.SequentialDownloader;
 import at.ac.fhcampuswien.newsapi.NewsApi;
 import at.ac.fhcampuswien.newsapi.NewsApiBuilder;
 import at.ac.fhcampuswien.newsapi.enums.Country;
@@ -47,9 +50,8 @@ public class UserInterface {
 		menu.insert("x", "Shortest author name", this::getShortestNameOfAuthors);	// Exercise 3
 		menu.insert("y", "Get article count", this::getArticleCount);	// Exercise 3
 		menu.insert("z", "Sort by longest title", this::getSortArticlesByLongestTitle); // Exercise 3
-		menu.insert("g", "Download URLs", () -> {
-			//Todo
-		});
+		menu.insert("s", "Sequential Download URLs",this::sequentialDownload);
+		menu.insert("p", "Parallel Download URLs",this::parallelDownload);
 		menu.insert("q", "Quit", null);
 		Runnable choice;
 		while ((choice = menu.exec()) != null) {
@@ -58,6 +60,18 @@ public class UserInterface {
 		System.out.println("Program finished");
 	}
 
+	private void parallelDownload(){
+		downloadS( new ParallelDownloader());
+
+	}
+
+	private void sequentialDownload(){
+		downloadS( new SequentialDownloader());
+	}
+
+	private void downloadS(Downloader downloader){
+			ctrl.downloadURL(downloader);
+	}
 
     protected String readLine() {
 		String value = "\0";
